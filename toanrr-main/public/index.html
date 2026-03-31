@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Graph Coloring Tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- VIS NETWORK -->
+    <script src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- LEFT -->
+        <div class="panel left">
+            <h2>📥 Nhập đồ thị</h2>
+
+            <textarea id="edges" placeholder="Ví dụ:
+1 2
+2 3
+3 4
+4 1"></textarea>
+
+            <div class="controls">
+                <select id="method" onchange="showExplanation()">
+                    <option value="rlf">RLF</option>
+                    <option value="welsh">Welsh-Powell</option>
+                    <option value="dsatur">DSATUR</option>
+                </select>
+
+                <button onclick="run()">🚀 Chạy</button>
+                <button onclick="compare()">⚔️ So sánh</button>
+            </div>
+
+            <div class="controls">
+                <button onclick="clearGraph()">🧹 Xóa</button>
+            </div>
+
+            <!-- GIẢI THÍCH -->
+            <div id="explanation" class="explanation-box"></div>
+        </div>
+
+        <!-- CENTER -->
+        <div class="panel center">
+            <h2>📊 Đồ thị</h2>
+            <div id="network"></div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="panel right">
+            <h2>📋 Kết quả</h2>
+
+            <div id="info"></div>
+
+            <h3>🎨 Lớp màu</h3>
+            <div id="colorList"></div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
