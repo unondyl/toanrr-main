@@ -7,29 +7,30 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.static("public"));
 
 function parseGraph(edgeText) {
-  const lines = edgeText.trim().split('\n');
+  const lines = edgeText.trim().split("\n");
   const edgeSet = new Set();
   const vertices = new Set();
   const edges = [];
 
-    for (let i = 0; i < lines.length; i++) {
+  for (let i = 0; i < lines.length; i++) {
     const parts = lines[i].trim().split(/\s+/);
     if (parts.length < 2) continue;
 
     let u = parts[0];
     let v = parts[1];
 
-    const valid = (x) => /^\d+$/.test(x) || /^[a-zA-Z]$/.test(x);
+    // Thay đổi ở đây: Gộp chung chữ cái và số vào một Regex
+    const valid = (x) => /^[a-zA-Z0-9]+$/.test(x);
 
     if (!valid(u) || !valid(v)) {
-      return { error: `Dòng ${i + 1}: đỉnh không hợp lệ` };
+      return { error: `Dòng ${i + 1}: đỉnh không hợp lệ (${u}, ${v})` };
     }
 
     vertices.add(u);
     vertices.add(v);
 
     if (u !== v) {
-      const key = [u, v].sort().join('-');
+      const key = [u, v].sort().join("-");
       if (!edgeSet.has(key)) {
         edgeSet.add(key);
         edges.push({ from: u, to: v });
