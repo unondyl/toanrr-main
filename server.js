@@ -258,6 +258,30 @@ app.post("/api/process", (req, res) => {
   });
 });
 
-app.listen(3000, () => console.log("🚀 http://localhost:3000"));
+// ====================== API ======================
+app.post("/api/process", (req, res) => {
+  const { edges, method = "welsh" } = req.body;
+
+  const parsed = parseGraph(edges);
+  if (parsed.error) return res.json(parsed);
+
+  let result;
+  if (method === "dsatur") result = DSATUR(parsed.vertices, parsed.edges);
+  else if (method === "rlf") result = RLF(parsed.vertices, parsed.edges);
+  else result = WelshPowell(parsed.vertices, parsed.edges);
+
+  const final = buildResult(parsed.vertices, parsed.edges, result);
+
+  res.json({
+    ...final,
+    steps: result.steps,
+  });
+});
+
+if (process.env.NODE_ENV !== "production") {
+  app.listen(3000, () =>
+    console.log("🚀 Server đang chạy tại http://localhost:3000"),
+  );
+}
 
 module.exports = app;
