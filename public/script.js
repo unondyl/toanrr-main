@@ -83,6 +83,22 @@ async function run() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ edges: text }),
   });
+  try {
+    // KIỂM TRA LỖI 404, 500 TRƯỚC KHI PARSE JSON
+    if (!response.ok) {
+      throw new Error(`Lỗi server: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Hiển thị kết quả ra màn hình...
+  } catch (error) {
+    console.error("Chi tiết lỗi:", error);
+    alert("Có lỗi xảy ra khi gọi API. Vui lòng thử lại!"); // Thông báo cho user
+  } finally {
+    // TẮT TRẠNG THÁI LOADING Ở ĐÂY (luôn chạy dù thành công hay lỗi)
+    // Stop timer()
+  }
 
   const data = await res.json();
   renderColorGroups(data);
