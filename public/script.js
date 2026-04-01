@@ -92,7 +92,7 @@ async function run() {
 
     // Hiển thị kết quả ra màn hình...
   } catch (error) {
-    console.error("Chi tiết lỗi:", error);
+    //console.error("Chi tiết lỗi:", error);
     alert("Có lỗi xảy ra khi gọi API. Vui lòng thử lại!"); // Thông báo cho user
   } finally {
     // TẮT TRẠNG THÁI LOADING Ở ĐÂY (luôn chạy dù thành công hay lỗi)
