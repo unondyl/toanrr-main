@@ -49,7 +49,6 @@ function init() {
       },
       edges: {
         smooth: true,
-        selfReferenceSize: 40,
         selfReference: {
           size: 40,
           angle: Math.PI / 4,
