@@ -31,35 +31,25 @@ function showExplanation() {
   document.getElementById("explanation").innerHTML = explanations[method];
 }
 // ===== INIT =====
-// ===== INIT =====
 function init() {
-  const container = document.getElementById("network");
+    const container = document.getElementById("network");
 
-  network = new vis.Network(
-    container,
-    {
-      nodes: nodes,
-      edges: edges,
-    },
-    {
-      nodes: {
-        shape: "dot",
-        size: 25,
-        font: { size: 16 },
-      },
-      edges: {
-        smooth: true,
-        selfReference: {
-          size: 40,
-          angle: Math.PI / 4,
-          renderBehindTheNode: true,
+    network = new vis.Network(container, {
+        nodes: nodes,
+        edges: edges
+    }, {
+        nodes: {
+            shape: 'dot',
+            size: 25,
+            font: { size: 16 }
         },
-      },
-      physics: {
-        stabilization: { iterations: 200 },
-      },
-    },
-  );
+        edges: {
+            smooth: true
+        },
+        physics: {
+            stabilization: { iterations: 200 }
+        }
+    });
 }
 
 // ===== RUN =====
