@@ -1,14 +1,14 @@
-const Multiset = require('./lib/multiset.js');
-const express = require('express');
-const path = require('path');
+const Multiset = require("./lib/multiset.js");
+const express = require("express");
+const path = require("path");
 const app = express();
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.static('public'));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.static("public"));
 
 // ====================== PARSE ======================
 function parseGraph(edgeText) {
-  const lines = edgeText.trim().split('\n');
+  const lines = edgeText.trim().split("\n");
   const edgeSet = new Multiset();
   const vertices = new Multiset();
   const edges = [];
@@ -30,7 +30,7 @@ function parseGraph(edgeText) {
     vertices.add(v);
 
     if (1) {
-      const key = [u, v].sort().join('-');
+      const key = [u, v].sort().join("-");
       if (1) {
         edgeSet.add(key);
         edges.push({ from: u, to: v });
@@ -44,8 +44,8 @@ function parseGraph(edgeText) {
 // ====================== RLF ======================
 function RLF(vertices, edges) {
   const adj = {};
-  vertices.forEach(v => adj[v] = new Set());
-  edges.forEach(e => {
+  vertices.forEach((v) => (adj[v] = new Set()));
+  edges.forEach((e) => {
     adj[e.from].add(e.to);
     adj[e.to].add(e.from);
   });
@@ -88,8 +88,8 @@ function RLF(vertices, edges) {
 // ====================== WELSH-POWELL ======================
 function WelshPowell(vertices, edges) {
   const adj = {};
-  vertices.forEach(v => adj[v] = new Set());
-  edges.forEach(e => {
+  vertices.forEach((v) => (adj[v] = new Set()));
+  edges.forEach((e) => {
     adj[e.from].add(e.to);
     adj[e.to].add(e.from);
   });
@@ -136,8 +136,8 @@ function WelshPowell(vertices, edges) {
 // ====================== DSATUR ======================
 function DSATUR(vertices, edges) {
   const adj = {};
-  vertices.forEach(v => adj[v] = new Set());
-  edges.forEach(e => {
+  vertices.forEach((v) => (adj[v] = new Set()));
+  edges.forEach((e) => {
     adj[e.from].add(e.to);
     adj[e.to].add(e.from);
   });
@@ -147,7 +147,7 @@ function DSATUR(vertices, edges) {
   const degree = {};
   let steps = [];
 
-  vertices.forEach(v => {
+  vertices.forEach((v) => {
     saturation[v] = 0;
     degree[v] = adj[v].size;
   });
@@ -158,9 +158,12 @@ function DSATUR(vertices, edges) {
     for (let v of vertices) {
       if (color[v]) continue;
 
-      if (!candidate ||
+      if (
+        !candidate ||
         saturation[v] > saturation[candidate] ||
-        (saturation[v] === saturation[candidate] && degree[v] > degree[candidate])) {
+        (saturation[v] === saturation[candidate] &&
+          degree[v] > degree[candidate])
+      ) {
         candidate = v;
       }
     }
@@ -168,7 +171,7 @@ function DSATUR(vertices, edges) {
     steps.push({ type: "select", node: candidate });
 
     let used = new Set();
-    adj[candidate].forEach(n => {
+    adj[candidate].forEach((n) => {
       if (color[n]) used.add(color[n]);
     });
 
@@ -179,10 +182,10 @@ function DSATUR(vertices, edges) {
 
     steps.push({ type: "color", node: candidate, color: c });
 
-    adj[candidate].forEach(n => {
+    adj[candidate].forEach((n) => {
       if (!color[n]) {
         const neighborColors = new Set();
-        adj[n].forEach(x => {
+        adj[n].forEach((x) => {
           if (color[x]) neighborColors.add(color[x]);
         });
         saturation[n] = neighborColors.size;
@@ -195,10 +198,10 @@ function DSATUR(vertices, edges) {
 
 // ====================== BUILD ======================
 function buildResult(vertices, edges, result) {
-  const nodes = vertices.map(v => ({
+  const nodes = vertices.map((v) => ({
     id: v,
     label: v,
-    color: "#9CA3AF"
+    color: "#9CA3AF",
   }));
 
   const groups = {};
@@ -211,11 +214,11 @@ function buildResult(vertices, edges, result) {
   return {
     nodes,
     edges,
-    colorGroups: Object.keys(groups).map(c => ({
+    colorGroups: Object.keys(groups).map((c) => ({
       color: c,
-      vertices: groups[c]
+      vertices: groups[c],
     })),
-    chromaticNumber: result.chromatic
+    chromaticNumber: result.chromatic,
   };
 }
 
@@ -235,26 +238,27 @@ function clearGraph() {
   showExplanation();
 }
 // ====================== API ======================
-app.post('/api/process', (req, res) => {
-  const { edges, method = 'welsh' } = req.body; // ✅ mặc định Welsh
+app.post("/api/process", (req, res) => {
+  const { edges, method = "welsh" } = req.body; // ✅ mặc định Welsh
 
   const parsed = parseGraph(edges);
   if (parsed.error) return res.json(parsed);
 
   let result;
 
-  if (method === 'dsatur') result = DSATUR(parsed.vertices, parsed.edges);
-  else if (method === 'rlf') result = RLF(parsed.vertices, parsed.edges);
+  if (method === "dsatur") result = DSATUR(parsed.vertices, parsed.edges);
+  else if (method === "rlf") result = RLF(parsed.vertices, parsed.edges);
   else result = WelshPowell(parsed.vertices, parsed.edges);
 
   const final = buildResult(parsed.vertices, parsed.edges, result);
 
   res.json({
     ...final,
-    steps: result.steps
+    steps: result.steps,
   });
 });
 
-app.listen(3000, () =>
-  console.log("🚀 http://localhost:3000")
-);
+// app.listen(3000, () =>
+//   console.log("🚀 http://localhost:3000")
+// );
+module.exports = app;
