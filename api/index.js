@@ -11,6 +11,7 @@ function parseGraph(edgeText) {
   const edgeSet = new Set();
   const vertices = new Set();
   const edges = [];
+
     for (let i = 0; i < lines.length; i++) {
     const parts = lines[i].trim().split(/\s+/);
     if (parts.length < 2) continue;
@@ -26,7 +27,7 @@ function parseGraph(edgeText) {
 
     vertices.add(u);
     vertices.add(v);
-  }
+
     if (u !== v) {
       const key = [u, v].sort().join('-');
       if (!edgeSet.has(key)) {
@@ -35,6 +36,9 @@ function parseGraph(edgeText) {
       }
     }
   }
+
+  return { vertices: Array.from(vertices), edges };
+}
 // ====================== RLF ======================
 function RLF(vertices, edges) {
   const adj = {};
