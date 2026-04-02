@@ -39,3 +39,7 @@ Dự án được thiết kế theo mô hình Client - Server đơn giản với
    ```bash
    git clone [https://github.com/unondyl/toanrr-main.git](https://github.com/unondyl/toanrr-main.git)
    cd toanrr-main
+2. **Cài đặt thư viện cần thiết**
+   ```bash
+   npm install
+   npm install express
